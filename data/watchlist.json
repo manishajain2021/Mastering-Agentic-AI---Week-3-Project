@@ -1,0 +1,72 @@
+[
+  {
+    "record_id": "SYN001",
+    "entity_type": "individual",
+    "name": "Avery Rowan Vale",
+    "aliases": [
+      "A R Vale"
+    ],
+    "date_of_birth": "1982-04-16",
+    "country_code": "TEST-A",
+    "identifier": "SYN-P001",
+    "list_name": "SYNTHETIC_WATCHLIST",
+    "reason": "Synthetic designation A",
+    "disclaimer": "Fictional test record only"
+  },
+  {
+    "record_id": "SYN002",
+    "entity_type": "individual",
+    "name": "Morgan Ellis Reed",
+    "aliases": [
+      "Morgan E Reed"
+    ],
+    "date_of_birth": "1975-09-23",
+    "country_code": "TEST-B",
+    "identifier": "SYN-P002",
+    "list_name": "SYNTHETIC_WATCHLIST",
+    "reason": "Synthetic designation B",
+    "disclaimer": "Fictional test record only"
+  },
+  {
+    "record_id": "SYN003",
+    "entity_type": "entity",
+    "name": "Cobalt Lantern Trading Ltd",
+    "aliases": [
+      "Cobalt Lantern Trading"
+    ],
+    "date_of_birth": "",
+    "country_code": "TEST-C",
+    "identifier": "SYN-REG003",
+    "list_name": "SYNTHETIC_WATCHLIST",
+    "reason": "Synthetic designation C",
+    "disclaimer": "Fictional test record only"
+  },
+  {
+    "record_id": "SYN004",
+    "entity_type": "entity",
+    "name": "Silver Orchard Exports LLC",
+    "aliases": [
+      "Silver Orchard Exports"
+    ],
+    "date_of_birth": "",
+    "country_code": "TEST-A",
+    "identifier": "SYN-REG004",
+    "list_name": "SYNTHETIC_WATCHLIST",
+    "reason": "Synthetic designation A",
+    "disclaimer": "Fictional test record only"
+  },
+  {
+    "record_id": "SYN005",
+    "entity_type": "individual",
+    "name": "Jordan Quinn Marlow",
+    "aliases": [
+      "J Q Marlow"
+    ],
+    "date_of_birth": "1990-01-08",
+    "country_code": "TEST-C",
+    "identifier": "SYN-P005",
+    "list_name": "SYNTHETIC_WATCHLIST",
+    "reason": "Synthetic designation B",
+    "disclaimer": "Fictional test record only"
+  }
+]

@@ -1,0 +1,6 @@
+.env
+runtime/
+node_modules/
+*.log
+tools/
+n8n/*_Configured.json

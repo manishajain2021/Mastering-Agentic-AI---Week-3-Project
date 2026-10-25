@@ -1,0 +1,11 @@
+﻿case_id,scenario,live_run_status,reviewer_acceptance,claim_faithfulness,cost_usd,review_notes
+EV01,Exact synthetic match,Not run,Not measured,Not measured,Not measured,
+EV02,Name only,Not run,Not measured,Not measured,Not measured,
+EV03,Identifier conflict,Not run,Not measured,Not measured,Not measured,
+EV04,No match,Not run,Not measured,Not measured,Not measured,
+EV05,Repeated party,Not run,Not measured,Not measured,Not measured,
+EV06,Missing transaction amount,Not run,Not measured,Not measured,Not measured,
+EV07,Multiple currencies,Not run,Not measured,Not measured,Not measured,
+EV08,Research tool unavailable,Not run,Not measured,Not measured,Not measured,
+EV09,Injected transaction concern,Not run,Not measured,Not measured,Not measured,
+EV10,Resume persisted review,Not run,Not measured,Not measured,Not measured,

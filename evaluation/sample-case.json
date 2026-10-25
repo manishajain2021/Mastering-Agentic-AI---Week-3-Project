@@ -1,0 +1,35 @@
+{
+  "synthetic": true,
+  "concern": "Analyst requests a factual training brief for repeated transfers and screening.",
+  "parties": [
+    {
+      "id": "P01",
+      "name": "Avery Rowan Vale",
+      "identifier": "SYN-P001",
+      "date_of_birth": "1982-04-16"
+    },
+    {
+      "id": "P02",
+      "name": "Taylor Wren Solace",
+      "identifier": "SYN-P999"
+    }
+  ],
+  "transactions": [
+    {
+      "id": "T01",
+      "date": "2026-10-20",
+      "amount": "4200.00",
+      "currency": "USD",
+      "sender": "P01",
+      "recipient": "P02"
+    },
+    {
+      "id": "T02",
+      "date": "2026-10-21",
+      "amount": "3100.50",
+      "currency": "USD",
+      "sender": "P01",
+      "recipient": "P02"
+    }
+  ]
+}

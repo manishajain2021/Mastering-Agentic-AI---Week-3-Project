@@ -1,0 +1,253 @@
+{
+  "name": "SAR 01 - Agent Investigation Loop",
+  "nodes": [
+    {
+      "id": "49640406-e563-49a0-afbc-6351c18e0dfe",
+      "name": "Run Case",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        300
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sar-agent-run",
+        "authentication": "headerAuth",
+        "responseMode": "onReceived",
+        "options": {}
+      }
+    },
+    {
+      "id": "3bc9bcc0-3970-41fb-89b4-2226eb2dd3a9",
+      "name": "Read Case ID",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        300
+      ],
+      "parameters": {
+        "jsCode": "const b=$input.first().json.body??$input.first().json;if(!/^CASE-[a-f0-9-]{36}$/.test(b.case_id))throw Error('Invalid case ID');return [{json:{case_id:b.case_id}}];"
+      }
+    },
+    {
+      "id": "51b61978-caea-4308-ae8c-eb2583bda2f3",
+      "name": "Load Context",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://REPLACE-WITH-YOUR-CASE-SERVICE/internal/cases/{{ $json.case_id || $json.id }}/context",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({}) }}",
+        "options": {
+          "timeout": 30000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      }
+    },
+    {
+      "id": "d30c6d17-1880-4c89-a2c8-4dc38f26f359",
+      "name": "Can Continue",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "db4e4098-2fa0-408d-bda4-d59e6702e2b9",
+              "leftValue": "={{ $json.continue }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "5c8a2391-1cb4-4ab7-a9f1-7f9f94738dfc",
+      "name": "Choose Next Tool",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.request) }}",
+        "options": {
+          "timeout": 30000
+        },
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi"
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "7cebefc2-0477-4959-839f-2d96377b8632",
+      "name": "Bind Decision To Case",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        300
+      ],
+      "parameters": {
+        "jsCode": "const ctx=$('Load Context').item.json;return [{json:{case_id:ctx.case_id,version:ctx.version,completion:$input.first().json}}];"
+      }
+    },
+    {
+      "id": "dd3b106f-6fe1-4030-aaa6-8540f0c8ef2a",
+      "name": "Execute Bounded Tool",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://REPLACE-WITH-YOUR-CASE-SERVICE/internal/cases/{{ $json.case_id }}/execute",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({version:$json.version,completion:$json.completion}) }}",
+        "options": {
+          "timeout": 30000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      }
+    },
+    {
+      "id": "95c66374-0061-4391-b174-38ae85100e72",
+      "name": "Paused Or Complete",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        880,
+        540
+      ],
+      "parameters": {}
+    }
+  ],
+  "connections": {
+    "Run Case": {
+      "main": [
+        [
+          {
+            "node": "Read Case ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Case ID": {
+      "main": [
+        [
+          {
+            "node": "Load Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Context": {
+      "main": [
+        [
+          {
+            "node": "Can Continue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Can Continue": {
+      "main": [
+        [
+          {
+            "node": "Choose Next Tool",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Paused Or Complete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Choose Next Tool": {
+      "main": [
+        [
+          {
+            "node": "Bind Decision To Case",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bind Decision To Case": {
+      "main": [
+        [
+          {
+            "node": "Execute Bounded Tool",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Bounded Tool": {
+      "main": [
+        [
+          {
+            "node": "Load Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "executionTimeout": 240,
+    "saveExecutionProgress": true
+  },
+  "active": false,
+  "pinData": {}
+}

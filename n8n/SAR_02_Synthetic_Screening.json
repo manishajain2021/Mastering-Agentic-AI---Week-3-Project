@@ -1,0 +1,90 @@
+{
+  "name": "SAR 02 - Synthetic Watchlist API",
+  "nodes": [
+    {
+      "id": "68ab9d78-4217-4fec-afc0-a48f916becdf",
+      "name": "Screen Parties",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        300
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sar-synthetic-screen",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "52bfe4ce-31f2-4b4e-a66f-6426630068d8",
+      "name": "Screen Synthetic Parties",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://REPLACE-WITH-YOUR-CASE-SERVICE/internal/screen",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.body) }}",
+        "options": {
+          "timeout": 30000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      }
+    },
+    {
+      "id": "7959e433-2c3f-4ac3-8f9a-63376648d360",
+      "name": "Return Screening",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        480,
+        300
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Screen Parties": {
+      "main": [
+        [
+          {
+            "node": "Screen Synthetic Parties",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Screen Synthetic Parties": {
+      "main": [
+        [
+          {
+            "node": "Return Screening",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "executionTimeout": 240,
+    "saveExecutionProgress": true
+  },
+  "active": false,
+  "pinData": {}
+}
